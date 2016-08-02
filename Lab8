@@ -1,0 +1,198 @@
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Collections;
+
+namespace DoctorManagement
+{
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            Console.WriteLine("1. Add new Doctor");
+            Console.WriteLine("2. View list of Doctor");
+            Console.WriteLine("3. Sort Doctor by Rank");
+            Console.WriteLine("4. Delete aDoctor");
+            Console.WriteLine("5. Search Doctor by Email");
+            Console.WriteLine("6. Exit");
+            Console.WriteLine("Please an option: ");
+            string x = Console.ReadLine();
+
+            switch (x)
+            {
+                case "1":
+                    Doctor dt = new Doctor();
+                    dt.ID++;
+                    Console.WriteLine("Name: ");
+                    dt.Name = Console.ReadLine();
+                    Console.WriteLine("BirthDay: ");
+                    DateTime bday;
+                    while (!DateTime.TryParse(Console.ReadLine(), out bday))
+                    {
+                        Console.WriteLine("Re-enter bithday: ");
+                    }
+                    dt.BirthDay = bday;
+                    Console.WriteLine("Speciallity: ");
+                    dt.Speciality = Console.ReadLine();
+                    Console.WriteLine("Email: ");
+                    dt.Email = Console.ReadLine();
+                    Console.WriteLine("Rank: ");
+                    dt.Rank = Convert.ToInt32(Console.ReadLine());
+                    
+                    Console.WriteLine("Phone 1: ");
+                    for (int i = 0; i < 3; i++)
+                    {
+                        Console.WriteLine("Phone {0}: ",i);
+                        dt[i] = int.Parse(Console.ReadLine());
+                    }
+
+                    break;
+                default:
+                    break;
+            }
+        }
+    }
+
+    interface IDoctor
+    {
+        int ID { get; set; }
+        string Name { get; set; }
+        DateTime BirthDay { get; set; }
+        string Speciality { get; set; }
+        string Email { get; set; }
+        int Rank { set; }
+
+        string this[int index] { get; set; }
+
+        void ShowInfo();
+    }
+
+    class Doctor : IDoctor
+    {
+        int _id;
+        string _name;
+        DateTime _birthDay;
+        string _specially;
+        string _email;
+        public int _rank;
+
+        #region IDoctor Members
+
+        public int ID
+        {
+            get
+            {
+                return _id;
+            }
+            set
+            {
+                _id = value;
+            }
+        }
+
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+            set
+            {
+                _name = value;
+            }
+        }
+
+        public DateTime BirthDay
+        {
+            get
+            {
+                return _birthDay;
+            }
+            set
+            {
+                _birthDay = value;
+            }
+        }
+
+        public string Speciality
+        {
+            get
+            {
+                return _specially;
+            }
+            set
+            {
+                _specially = value;
+            }
+        }
+
+        public string Email
+        {
+            get
+            {
+                return _email;
+            }
+            set
+            {
+                _email = value;
+            }
+        }
+
+        public int Rank
+        {
+            set { _rank = value; }
+        }
+
+        string[] PhoneList = new string[3];
+
+        public string this[int index]
+        {
+            get
+            {
+                return PhoneList[index];
+            }
+            set
+            {
+                PhoneList[index] = value;
+            }
+        }
+
+        #endregion
+    }
+
+    class DoctorManagement
+    {
+        private ArrayList doctorList = new ArrayList();
+        public void Add(IDoctor doctor)
+        {
+            doctorList.Add(doctor);
+        }
+
+        public void Remove(IDoctor doctor)
+        {
+            doctorList.Remove(doctor);
+        }
+
+        public void Sort(IComparer comp)
+        {
+            doctorList.Sort(comp);
+        }
+    }
+
+    class SortbyRank : IComparer
+    {
+        
+        #region IComparer Members
+
+        public int Compare(object x, object y)
+        {
+            
+            Doctor A = (Doctor)x;
+            Doctor B = (Doctor)y;
+            return A._rank.CompareTo(B._rank);
+        }
+
+        #endregion
+    }
+}
